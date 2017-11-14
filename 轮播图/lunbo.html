@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style type="text/css">
+	body{ padding:20px;}
+	#container{left:100px;width:600px;height:400px;border:3px solid #333;position:relative;overflow:hidden;}
+	#list{width:4200px;height:400px;position:absolute;z-index:1;}
+	#list img{float:left;}
+	#buttons{position:absolute;height:10px;width:100px;z-index:2;bottom:20px;left:250px;}
+	<!--#button span{cursor:pointer;float:left;border:1px solid #FFF;width:10px;height:10px;border-raius:50%;background:#333;margin-right:5px;}
+	#buttons span { margin: 0 4px; height: 15px; width: 15px; float: left; text-indent: -9999px; cursor: pointer; border: 1px solid #fff; border-radius: 50%; background-color: #333;}
+	#buttons .on{background-color:orangered;}
+	.arrow{cursor:pointer;display:none;line-height:39px;text-align:center;font-size:36px;font-weight:bold;width:40px;position:absolute;z-index:3;top:180px;background-color:GRBA(0,0,0,.3);color:#C00}
+	.arrow:hover .arrow{background-color:RGBA(0,0,0,.7);}
+	#container:hover .arrow{display:block}
+	#prev{left:20px;}
+	#next{right:20px;}
+</style>
+</head>
+
+<body>
+<div id="container"onmouseover="stop()"onmouseout="bofang()">
+	<div id="list"style="left:-600px;float:left;">
+  		 <img src="i11.jpg">
+        <img src="i8.jpg">
+        <img src="i10.jpg">
+        <img src="i11.jpg">
+        <img src="i8.jpg">
+	</div>
+  <div id="buttons">
+    	<span index="1"class="on"></span>
+        <span index="2"></span>
+        <span index="3"></span>
+    </div>
+    <a href="javascript:;"class="arrow"id="prev">&lt;</a>
+    <a href="javascript:;"class="arrow"id="next">&gt;</a>
+</div>
+<script type="text/javascript">
+			var timer;
+			var container=document.getElementById('contianer');
+			var list=document.getElementById('list');
+			var buttons=document.getElementById('buttons').getElementsByTagName('span');
+			var prev=document.getElementById('prev');
+			var next=document.getElementById('next');
+			var index=1;
+			var animated=false;
+			for(var i=0;i<buttons.length;i++)
+			{
+					buttons[i].onclick=function()
+					{
+						if(this.className=='on')
+						{
+							return;
+						}
+						var myindex=parseInt(this.getAttribute('index'));
+						var offset=-600*(myindex-index);
+						index=myindex;
+						animate(offset);
+						showButton();
+					}
+			}
+			function showButton()
+			{
+				for(var i=0;i<buttons.length;i++)
+				{
+					if(buttons[i].className=='on')
+					{
+							buttons[i].className='';
+							break;
+					}
+				}
+					buttons[index-1].className='on';
+			}
+			function animate(offset)
+			{	animated=true;
+				var time=300;
+				var interval=100;
+				var speed=offset/(time/interval);
+				var newleft=parseInt(list.style.left)+offset;
+				function go()
+				{
+						if((speed<0&&parseInt(list.style.left)>newleft)||(speed>0&&parseInt(list.style.left)<newleft))
+						{
+							list.style.left=parseInt(list.style.left)+speed+'px';
+							setTimeout(go,interval);
+						}
+						else
+						{
+							animated=false;
+							list.style.left=newleft+'px';
+							if(newleft>-600)
+							{
+								list.style.left=-1800+'px';
+							}
+							if(newleft<-1800)
+							{
+								list.style.left=-600+'px';
+							}
+						}
+				}
+					go();
+			}
+			function bofang()
+			{
+					timer=setInterval(function(){ next.onclick();},3000);
+			}
+			 function stop(){
+                clearInterval(timer);
+            }
+			next.onclick=function()
+			{
+				if(index==3)
+				{
+					index=1;
+				}
+				else
+				{
+					index+=1;
+				}
+				showButton();
+				if(animated==false){
+				animate(-600);
+				}
+			}
+			prev.onclick=function()
+			{
+				if(index==1)
+				{
+					index=3;
+				}
+				else
+				{
+					index--;
+				}
+				showButton();
+				animate(600);
+			}
+			bofang();
+</script>
+</body>
+</html>
